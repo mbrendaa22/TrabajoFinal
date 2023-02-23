@@ -1,1 +1,2 @@
-PATH = 'C:/Users/bdmartinez/Desktop/_TRABAJO_FINAL/PolynomialRegressionPrediction/model.sav'
+PATH = './model.sav'
+LIBRO = './LIBRO_DE_PRUEBA.xlsx'

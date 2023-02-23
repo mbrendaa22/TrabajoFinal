@@ -23,7 +23,7 @@ Los datos usados fueron: Radiación, Temperatura Máxima, Temperatura Minima, Pr
 fue el método Penman Monteith de la Organización de las Naciones Unidas para la Agricultura y la Alimentación (FAO) 
 """)
 
-file = 'C:/Users/breee/Desktop/PolynomialRegressionPrediction/LIBRO_DE_PRUEBA.xlsx'
+file = config.LIBRO
 # se carga el archivo
 df1 = pd.read_excel(file)
 
@@ -51,29 +51,29 @@ with st.expander("¿Todo listo? SUBE TU ARCHIVO "):
         dfUploadFile = pd.read_excel(uploaded_file)
         # Muestra el contenido del archivo en una tabla
         st.dataframe(dfUploadFile)
-    #else:
+        model = pickle.load(open(config.PATH, 'rb'))
+        # se hace la prediccion
+        poly = PolynomialFeatures(degree=3)
+        prediction = model.predict(poly.fit_transform(dfUploadFile)) 
+    else:
         # Si no se ha cargado un archivo, muestra un mensaje
-        #st.write("No has cargado ningún archivo")
-
-# se carga el modelo entrenado para hacer predicciones
-#model = pickle.load(open('C:/Users/bdmartinez/Desktop/_TRABAJO_FINAL/PolynomialRegressionPrediction/model.sav', 'rb')) #read binary
-model = pickle.load(open(config.PATH, 'rb'))
-# se hace la prediccion
-poly = PolynomialFeatures(degree=3)
-prediction = model.predict(poly.fit_transform(dfUploadFile)) 
- 
+        st.write("Suba un archivo con extensión .xlsx")
+    # se carga el modelo entrenado para hacer predicciones
+    #model = pickle.load(open('C:/Users/bdmartinez/Desktop/_TRABAJO_FINAL/PolynomialRegressionPrediction/model.sav', 'rb')) #read binary
+    
+    
 #se crea un archivo excel
 #wr = pd.ExcelWriter('archivoFinal.xlsx', engine='xlsxwriter')  
 
 #print("Para saber cuánta pérdida de agua hay por hectarea ingrese por favor el número de hectareas:")
-ha = st.text_input("¿Cuántas hectáreas tienes?")
+ha = int(st.text_input("¿Cuántas hectáreas tienes?"),10) #Esto es un string, por lo que hay que transformarlo a float o int
 #ha= int(input())
 
 if ha:
   # el ciclo for itera sobre cada preddicion de la lista prediction
   df2 = pd.DataFrame()
   for p in prediction:
-
+    print(p[0])
     # se obtiene x a partir de la prediccion y la variable ha
     x = (p[0] * ha)/1
     # se redondea a dos decimales
