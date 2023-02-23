@@ -1,0 +1,1 @@
+PATH = 'C:/Users/bdmartinez/Desktop/_TRABAJO_FINAL/PolynomialRegressionPrediction/model.sav'
