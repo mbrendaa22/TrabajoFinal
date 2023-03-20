@@ -44,9 +44,9 @@ with st.expander(":raised_hand_with_fingers_splayed:  ¿COMO FUNCIONA? "):
 
 with st.expander(" :boom: INFORMACIÓN IMPORTANTE ANTES DE SUBIR TU ARCHIVO :boom:"):
     st.write(":arrow_right: La radiación debe estar en MJ/m²/día")
-    st.write("Usa la siguiente formula: $$R * 0,0036$$")
+    st.write("Usa la siguiente formula: $$R * 0,0036$$ donde R es la radiación en W/m²/dia ")
     st.write(":arrow_right: ¿No sabes cómo obtener la presion de vapor actual? ¡Yo te ayudo!")
-    st.write("Usa la siguiente formula: 0.6108 **(17.27 * T / (T + 237.3)) * rhmed / 10 ")
+    st.write("Usa la siguiente formula: 0.6108 ^ (17.27 * T / (T + 237.3)) * rhmed / 10 ")
     st.write("Donde T: temperatura media, rhmed: humedad relativa media")
 
 # Crear formulario para introducir archivo y ha
@@ -84,13 +84,15 @@ with st.form("my_form"):
       # el ciclo for itera sobre cada prediccion de la lista prediction
         df2 = pd.DataFrame()
         for p in predictionETO:
-          #print(p[0])
-          # se obtiene aP(agua perdida) a partir de la prediccion ETO y la variable ha
-          aP = (p[0] * ha)/1
+          predictionETO_m = p[0] / 1000  # Conversión de mm a metro
+          aP_m3 = predictionETO_m * ha # Cálculo de la pérdida de agua en metros cúbicos
+          aP_litros = aP_m3 * 1000 # Conversión de metros cúbicos a litros
+          aguaPerdida = aP_litros / ha
+          #aP = (p[0] * ha)/1
           # se redondea a dos decimales
-          aguaPerdidaPorHa = np.round(aP, decimals=2)
+          aguaPerdidaPorHa = np.round(aguaPerdida, decimals=2)
           # se agrega cada valor de d al dataframe df2
-          df2 = df2.append({'AguaPerdida': aguaPerdidaPorHa}, ignore_index=True)
+          df2 = df2.append({'Pérdida de agua (litros/ha/día)': aguaPerdidaPorHa}, ignore_index=True)
           # se crea una columna al dataframe df1 con los valores de la lista prediccion
           df_uploaded_file['ETO'] = predictionETO
 
