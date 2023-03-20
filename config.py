@@ -1,2 +1,2 @@
-PATH = './model.sav'
-LIBRO = './LIBRO_DE_PRUEBA.xlsx'
+MODEL = './ModeloEntrenado.sav'
+ARCHIVO_EJEMPLO = './archivoEjemplo.xlsx'
