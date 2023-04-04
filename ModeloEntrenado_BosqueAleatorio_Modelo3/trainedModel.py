@@ -7,6 +7,7 @@ import openpyxl
 import streamlit as st
 from io import BytesIO
 from config import MODEL, ARCHIVO_EJEMPLO
+import matplotlib.pyplot as plt
 
 st.header(' :blue[_Trabajo Final: Comparación de modelos de regresión para predecir la evapotranspiración potencial diaria y calcular la pérdida de agua por hectárea en la zona sur de Mendoza_] :blue_book: ')
 st.subheader('Alumna: Brenda Martinez')
@@ -19,7 +20,7 @@ Esto ayuda a los agricultores a tomar decisiones informadas sobre el riego y a o
 
 st.markdown("""Es importante que sepas que este modelo fue entrenado con datos diarios de la estación meteorológica de La Llave, Mendoza Argentina :flag-ar: . 
 Por lo tanto estamos hablando de una zona con una elevación sobre el nivel del mar de 780m y una latitud de  34° 51' S aprox.
-Los datos usados fueron: Radiación, Temperatura Máxima, Temperatura Minima, Presión de vapor del aire y Viento. El método usado para el cálculo de la evapotranspiración (ETO) 
+Los datos usados fueron: Radiación, Temperatura Máxima, Temperatura Mínima, Presión de vapor del aire y Viento. El método usado para el cálculo de la evapotranspiración (ETO) 
 fue el método Penman Monteith de la Organización de las Naciones Unidas para la Agricultura y la Alimentación (FAO) y la herramienta usada para calcular la ETO fue AGROCLIMA. 
 """)
 
@@ -28,7 +29,7 @@ df = pd.read_excel(ARCHIVO_EJEMPLO, engine='openpyxl')
 
 with st.expander(":raised_hand_with_fingers_splayed:  ¿COMO FUNCIONA? "):
     st.write("""Subirás un archivo con datos meteorológicos diarios como el siguiente ejemplo, 
-    luego te pediré que ingreses cuántas hectareas tienes y obtendrás como resultado un archivo excel descargable con la predicción de la ETO y la perdida de agua por hectarea""")
+    luego te pediré que ingreses cuántas hectareas tienes y obtendrás como resultado un archivo excel descargable con la predicción de la ETO y la perdida de agua por hectarea en litros por día""")
     st.table(df)
 
     # Escribir DataFrame en objeto BytesIO con formato Excel
@@ -99,6 +100,21 @@ with st.form("my_form"):
             # se crea una columna al dataframe df1 con los valores de la lista prediccion
             df_uploaded_file['ETO'] = np.round(predictionETO, decimals=2)
 
+        plt.style.use('dark_background')
+        fig, ax = plt.subplots()
+        ax.bar(np.arange(len(df2))+1, df2['Pérdida(litros/ha/día)']) # np.arange(len(df2))+1 crea una secuencia numérica de 1 a la cantidad de filas en df2, que son los valores del eje X
+        ax.set_xlabel('Día')
+        ax.set_ylabel('Cantidad de agua perdida (litros/ha/día)')
+        st.pyplot(fig)
+
+        plt.style.use('dark_background')
+        fig, ax = plt.subplots()
+        ax.bar(np.arange(len(df_uploaded_file))+1,  df_uploaded_file['ETO'] )
+        ax.set_xlabel('Día')
+        ax.set_ylabel('Eto')
+        st.pyplot(fig)
+
+
         # se escribe en un archivo excel los datos de df_uploaded_file y df2
         def generar_excel(df_uploaded_file, df2):
             excel = BytesIO()
@@ -116,8 +132,7 @@ with st.form("my_form"):
 if boolean:
     excel_bytes = generar_excel(df_uploaded_file, df2)
     st.download_button(label='Descargar archivo', data=excel_bytes , file_name='Resultado.xlsx', mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    # quiero mostrar la tabla final. Pensaba leer el archivo
-    df_prediccion = pd.read_excel(df_uploaded_file)
-    st.table(df_prediccion)
+
+    
 
 
