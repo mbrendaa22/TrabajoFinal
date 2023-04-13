@@ -26,11 +26,13 @@ fue el método Penman Monteith de la Organización de las Naciones Unidas para l
 
 # se carga el archivo de ejemplo
 df = pd.read_excel(ARCHIVO_EJEMPLO, engine='openpyxl')
+df_copy = df.astype('str')
+print(f"Dataframe:\n {df}")
 
 with st.expander(":raised_hand_with_fingers_splayed:  ¿COMO FUNCIONA? "):
     st.write("""Subirás un archivo con datos meteorológicos diarios como el siguiente ejemplo, 
     luego te pediré que ingreses cuántas hectareas tienes y obtendrás como resultado un archivo excel descargable con la predicción de la ETO y la perdida de agua por hectarea en litros por día""")
-    st.table(df)
+    st.table(df_copy)
 
     # Escribir DataFrame en objeto BytesIO con formato Excel
     sampleExcel = BytesIO()
@@ -73,7 +75,7 @@ with st.form("my_form"):
         # Si no se ha cargado un archivo, muestra un mensaje
         st.write("La extensión debe ser: .xlsx")
 
-    ha = st.number_input('¿Cuántas hectáreas tienes?', step = 1, value = 1) 
+    ha = st.number_input('¿Cuántas hectáreas tienes?', step = 1, value = 1, min_value=1) 
 
     submitted = st.form_submit_button("Submit :white_check_mark:")
   
