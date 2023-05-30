@@ -5,7 +5,7 @@ from openpyxl import Workbook
 import openpyxl
 import streamlit as st
 from io import BytesIO
-from config import MODEL, ARCHIVO_EJEMPLO, DATOS_MODELO_ENTRENADO
+from config import MODEL, ARCHIVO_EJEMPLO, DATOS_MODELO_ENTRENADO, OLD_PREDICCION
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
@@ -162,41 +162,32 @@ with st.form("my_form"):
         boolean = True 
 
         ######################### MONITOREAR PREDICCIÓN ############################################
-        # Obtener el número total de filas en el archivo df_uploaded_file subido por el usuario
-        total_filas = df_uploaded_file.shape[0]
-        print('total_filas del archivo que mete el usuario', total_filas)
+        #  ----- E V A L U A T I O N------   # 
+        #el archivo y_pred.xlsx guarda las predicciones hechas al guardar el modelo
+        #la idea es: compararlo con las predicciones actuales
+        new_pred = pd.DataFrame(predictionETO)
+        old_pred = pd.read_excel(OLD_PREDICCION, engine='openpyxl') 
+        print('------------------------------------------------------')
+        print('new_pred:', new_pred)
+        print('------------------------------------------------------')
 
-        #cargo los datos con los que se entrenó el ./ModeloEntrenado.sav
-        #para poder monitorizar la predicción con la predicción antes hecha
-        datos_entrenamiento_ba = pd.read_excel(DATOS_MODELO_ENTRENADO, engine='openpyxl')
-        print('este es el dataframe: ', datos_entrenamiento_ba)
-        print('tamaño de los datos de entrenamiento', len(datos_entrenamiento_ba))
-        # Definir variables independientes y target
-        target = datos_entrenamiento_ba['ETPF56']
-        y = pd.DataFrame.from_dict(target) 
-        variables = datos_entrenamiento_ba[['Mj/m2/d','TMax', 'TMin', 'PVA', 'Viento']]
-        X = pd.DataFrame.from_dict(variables) 
-
-        # Separar datos en conjunto de entrenamiento y prueba
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=total_filas/1096)
-
-        #  ----- E V A L U A T I O N------  
-        #guardar al predictionETO en un dataframe porque es un array de datos.
-        df_predictionETO = pd.DataFrame(predictionETO)
+        # Ajustar el tamaño de old_pred para que coincida con new_pred
+        old_pred = old_pred.head(len(new_pred))
+        # Imprimir tamaño del DataFrame ajustado
+        print('A la predicción anterior le ajusto el tamaño del nuevo dataset que ingresa el user:', len(old_pred))
+        print('------------------------------------------------------')
+        print('old_pred:', old_pred)
+        print('------------------------------------------------------')
 
         from sklearn.metrics import r2_score
         # The coefficient of determination: 1 is perfect prediction
-        coeficiente = r2_score(df_predictionETO, y_test)
-        print('-----------------y_test de la prediccion anterior------------------------')
-        print("y_test:", y_test)
-        print("El tamaño de y_test es:", len(y_test))
-        #print(y_test)
-        print('-----------------predictionETO de lo que mete el user------------------------')
-        print('df_predictionETO', df_predictionETO)
-        print("El tamaño de predictionETO es:", len(df_predictionETO))
-       # print(predictionETO)
-        print('Monitorear predicción: ')
-        print(coeficiente)
+        coeficiente = r2_score(old_pred, new_pred)
+        print("Coeficiente de determinación R2 comparado con predicción del modelo entrenado:", coeficiente)
+
+        from sklearn.metrics import mean_squared_error
+        model_rmse = np.sqrt(mean_squared_error(old_pred, new_pred))
+        print('RMSE: ', model_rmse)
+        
         ######################### MONITOREAR PREDICCIÓN ############################################
 
 if boolean:
