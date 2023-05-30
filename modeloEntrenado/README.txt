@@ -4,7 +4,9 @@ archivoEjemplo.xlsx: Este archivo es un ejemplo que se muestra al usuario como r
 
 archivoEjemplo2_Invierno.xlsx: Se utiliza como archivo de prueba con datos de invierno.
 
-datosEntrenarModelo.xlsx: Contiene los datos utilizados en el código trainModel.py para entrenar el modelo.
+datosEntrenarModelo.xlsx: Contiene los datos utilizados en el código trainModel.py para entrenar el modelo. (se borrará no se está usando, era una prueba)
+
+y_pred: Contiene los datos con la predicción obtenida al entrenar el modelo. La idea es usarla para monitorear la nueva predicción.
 
 ModeloEntrenado.sav: Es el modelo obtenido a partir del código trainModel.py y se utiliza para realizar predicciones.
 
