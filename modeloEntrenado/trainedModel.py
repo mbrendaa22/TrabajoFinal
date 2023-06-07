@@ -1,8 +1,6 @@
 import pickle 
-import numpy as np
 import pandas as pd
-from openpyxl import Workbook
-import openpyxl
+import numpy as np
 import streamlit as st
 from io import BytesIO
 from config import MODEL, ARCHIVO_EJEMPLO, DATOS_MODELO_ENTRENADO, OLD_PREDICCION
@@ -81,114 +79,134 @@ with st.form("my_form"):
   
     if submitted:
         
-      df_uploaded_file = pd.read_excel(uploaded_file, engine='openpyxl')   
+        df_uploaded_file = pd.read_excel(uploaded_file, engine='openpyxl')   
 
-      # se carga el modelo entrenado para hacer predicciones
-      rf_model = pickle.load(open('ModeloEntrenado.sav', 'rb')) #read binary
-      # se hace la prediccion con el archivo que sube el usuario
-      predictionETO = rf_model.predict(df_uploaded_file)
+        # se carga el modelo entrenado para hacer predicciones
+        rf_model = pickle.load(open('ModeloEntrenado.sav', 'rb')) #read binary
+        # se hace la prediccion con el archivo que sube el usuario
+        predictionETO = rf_model.predict(df_uploaded_file)
 
-      # ha = hectárea
-      # si ha ingresado las hectareas el siguiente paso es calcular la perdida de agua por hectárea teniendo en cuenta lo siguiente:
-      # perder 1 mm día-1 es equivalente 10 m3 ha-1 día-1 segun la FAO
-      if ha:
-      # el ciclo for itera sobre cada prediccion de la lista prediction
-        df2 = pd.DataFrame()
-        for p in predictionETO:
-            roundETo = np.round(p, decimals=2)
-            perdida_m3_ha_dia = roundETo * 10 * ha # pérdida en metros cúbicos por hectárea y día 
-            aguaPerdida_litros_m2_dia = perdida_m3_ha_dia*1000 # pérdida en litros por hectárea y día
-            df2 = df2.append({'Pérdida(litros/ha/día)': aguaPerdida_litros_m2_dia}, ignore_index=True)
-            # se crea una columna al dataframe df1 con los valores de la lista prediccion
-            df_uploaded_file['ETO'] = np.round(predictionETO, decimals=2)
+        # Guardar el DataFrame en un archivo Excel para usarlo luego para monitorear
+        dfPrediction = pd.DataFrame({'new_pred': predictionETO})
+        dfPrediction.to_excel('predictionETO.xlsx', index=False)
 
-        # Dar info al usuario sobre lo que está visualizando
-        with st.expander(" :information_source: INFORMACIÓN QUE TE GUSTARÍA SABER PARA UNA MEJOR INTERPRETACIÓN :bookmark_tabs:"):            
-            st.write(" :thinking_face: ¿Qué es la ETO?")
-            st.write("""La evapotranspiración del cultivo de referencia (ETo) representa
-                        la pérdida de agua de una superficie cultivada estándar.
-                        El concepto de evapotranspiración de referencia se introdujo para estudiar la
-                        demanda de evapotranspiración de la atmósfera, independientemente del tipo y
-                        desarrollo del cultivo, y de las prácticas de manejo.""")
-            st.write(" :straight_ruler: Unidad de la ETO")
-            st.write(""" La evapotranspiración se expresa normalmente en milímetros (mm) por unidad de
-                        tiempo. La unidad de tiempo puede ser una hora, día, 10 días, mes o incluso un completo período de cultivo o un año. """)
-            st.write(" 	:straight_ruler: ¿Como se mide?")
-            st.write("""Como una hectárea tiene una superficie de 10 000 m2 y 1 milímetro es igual a 0,001 m, 
-                    una pérdida de 1 mm de agua corresponde a una pérdida de 10 m3 de agua por
-                    hectárea. Es decir 1 mm día-1 es equivalente 10 m3 ha-1 día-1.""")
-            st.write(":rainbow: ¿Qué parámetros climáticos afectan a la ETO?")
-            st.write("Los principales parámetros climáticos que afectan la evapotranspiración son la radiación, la temperatura del aire, la humedad atmosférica y la velocidad del viento.")
+        # ha = hectárea
+        # si ha ingresado las hectareas el siguiente paso es calcular la perdida de agua por hectárea teniendo en cuenta lo siguiente:
+        # perder 1 mm día-1 es equivalente 10 m3 ha-1 día-1 segun la FAO
+        if ha:
+        # el ciclo for itera sobre cada prediccion de la lista prediction
+            df2 = pd.DataFrame()
+            for p in predictionETO:
+                roundETo = np.round(p, decimals=2)
+                perdida_m3_ha_dia = roundETo * 10 * ha # pérdida en metros cúbicos por hectárea y día 
+                aguaPerdida_litros_m2_dia = perdida_m3_ha_dia*1000 # pérdida en litros por hectárea y día
+                df2 = df2.append({'Pérdida(litros/ha/día)': aguaPerdida_litros_m2_dia}, ignore_index=True)
+                # se crea una columna al dataframe df1 con los valores de la lista prediccion
+                df_uploaded_file['ETO'] = np.round(predictionETO, decimals=2)
 
-        plt.style.use('dark_background')
-        fig, ax = plt.subplots()
-        ax.bar(np.arange(len(df2))+1, df2['Pérdida(litros/ha/día)']) # np.arange(len(df2))+1 crea una secuencia numérica de 1 a la cantidad de filas en df2, que son los valores del eje X
-        ax.set_xlabel('Día')
-        ax.set_ylabel('Cantidad de agua perdida (litros/ha/día)')
-        st.pyplot(fig)
+            # Dar info al usuario sobre lo que está visualizando
+            with st.expander(" :information_source: INFORMACIÓN QUE TE GUSTARÍA SABER PARA UNA MEJOR INTERPRETACIÓN :bookmark_tabs:"):            
+                st.write(" :thinking_face: ¿Qué es la ETO?")
+                st.write("""La evapotranspiración del cultivo de referencia (ETo) representa
+                            la pérdida de agua de una superficie cultivada estándar.
+                            El concepto de evapotranspiración de referencia se introdujo para estudiar la
+                            demanda de evapotranspiración de la atmósfera, independientemente del tipo y
+                            desarrollo del cultivo, y de las prácticas de manejo.""")
+                st.write(" :straight_ruler: Unidad de la ETO")
+                st.write(""" La evapotranspiración se expresa normalmente en milímetros (mm) por unidad de
+                            tiempo. La unidad de tiempo puede ser una hora, día, 10 días, mes o incluso un completo período de cultivo o un año. """)
+                st.write(" 	:straight_ruler: ¿Como se mide?")
+                st.write("""Como una hectárea tiene una superficie de 10 000 m2 y 1 milímetro es igual a 0,001 m, 
+                        una pérdida de 1 mm de agua corresponde a una pérdida de 10 m3 de agua por
+                        hectárea. Es decir 1 mm día-1 es equivalente 10 m3 ha-1 día-1.""")
+                st.write(":rainbow: ¿Qué parámetros climáticos afectan a la ETO?")
+                st.write("Los principales parámetros climáticos que afectan la evapotranspiración son la radiación, la temperatura del aire, la humedad atmosférica y la velocidad del viento.")
 
-        plt.style.use('dark_background')
-        fig, ax = plt.subplots()
-        ax.bar(np.arange(len(df_uploaded_file))+1,  df_uploaded_file['ETO'] )
-        ax.set_xlabel('Día')
-        ax.set_ylabel('Eto')
-        st.pyplot(fig)
+            plt.style.use('dark_background')
+            fig, ax = plt.subplots()
+            ax.bar(np.arange(len(df2))+1, df2['Pérdida(litros/ha/día)']) # np.arange(len(df2))+1 crea una secuencia numérica de 1 a la cantidad de filas en df2, que son los valores del eje X
+            ax.set_xlabel('Día')
+            ax.set_ylabel('Cantidad de agua perdida (litros/ha/día)')
+            st.pyplot(fig)
 
-        st.divider() 
-        with st.expander("Entonces... ¿Cómo interpretar los resultados? :thinking_face: "):
-            st.caption(" '_En un día soleado y cálido :sun_with_face: , la pérdida de agua por evapotranspiración será mayor que en un día nublado y fresco._' :barely_sunny:")
-            st.write("""Sin embargo, es importante tener en cuenta que la ETo puede variar significativamente según la ubicación geográfica,
-                    el clima local y las condiciones específicas de cada región.""")
-            st.write("Podríamos, entonces considerar lo siguiente:")
-            st.write(""" :snowman: Invierno: La evapotranspiración de referencia (ETo) tiende a ser más baja debido a las temperaturas frías y la menor cantidad de luz solar.
-                        En algunas regiones, es posible que haya una menor tasa de evapotranspiración debido a la presencia de nieve o heladas.
-                        """)
-            st.write(""" :sunny: Verano: En verano, la ETo tiende a ser más alta debido a las temperaturas cálidas y la mayor cantidad de luz solar. :thermometer:
-                        En esta época, la tasa de evapotranspiración puede ser alta debido a la mayor demanda de agua por parte de las plantas y la mayor tasa de evaporación del suelo""")
-            st.write(""" :sunflower: Primavera: La ETo aumenta gradualmente a medida que las temperaturas se vuelven más cálidas y hay más luz solar.""")
-            st.write(""" :fallen_leaf: Otoño: La ETo disminuye gradualmente a medida que las temperaturas se enfrían y los días se acortan.""")
+            plt.style.use('dark_background')
+            fig, ax = plt.subplots()
+            ax.bar(np.arange(len(df_uploaded_file))+1,  df_uploaded_file['ETO'] )
+            ax.set_xlabel('Día')
+            ax.set_ylabel('Eto')
+            st.pyplot(fig)
 
-        # se escribe en un archivo excel los datos de df_uploaded_file y df2
-        def generar_excel(df_uploaded_file, df2):
-            excel = BytesIO()
-            with pd.ExcelWriter(excel, engine='openpyxl') as writer: 
-                df_uploaded_file.to_excel(writer, sheet_name='Resultado', index=True, engine='openpyxl')
-                df2.to_excel(writer, sheet_name='Resultado', index=False, startcol=7, engine='openpyxl')
-            return excel.getvalue()
+            st.divider() 
+            with st.expander("Entonces... ¿Cómo interpretar los resultados? :thinking_face: "):
+                st.caption(" '_En un día soleado y cálido :sun_with_face: , la pérdida de agua por evapotranspiración será mayor que en un día nublado y fresco._' :barely_sunny:")
+                st.write("""Sin embargo, es importante tener en cuenta que la ETo puede variar significativamente según la ubicación geográfica,
+                        el clima local y las condiciones específicas de cada región.""")
+                st.write("Podríamos, entonces considerar lo siguiente:")
+                st.write(""" :snowman: Invierno: La evapotranspiración de referencia (ETo) tiende a ser más baja debido a las temperaturas frías y la menor cantidad de luz solar.
+                            En algunas regiones, es posible que haya una menor tasa de evapotranspiración debido a la presencia de nieve o heladas.
+                            """)
+                st.write(""" :sunny: Verano: En verano, la ETo tiende a ser más alta debido a las temperaturas cálidas y la mayor cantidad de luz solar. :thermometer:
+                            En esta época, la tasa de evapotranspiración puede ser alta debido a la mayor demanda de agua por parte de las plantas y la mayor tasa de evaporación del suelo""")
+                st.write(""" :sunflower: Primavera: La ETo aumenta gradualmente a medida que las temperaturas se vuelven más cálidas y hay más luz solar.""")
+                st.write(""" :fallen_leaf: Otoño: La ETo disminuye gradualmente a medida que las temperaturas se enfrían y los días se acortan.""")
 
-        # se guardan los cambios
-        writer.save()
-        writer.close()
-        boolean = True 
+            # se escribe en un archivo excel los datos de df_uploaded_file y df2
+            def generar_excel(df_uploaded_file, df2):
+                excel = BytesIO()
+                with pd.ExcelWriter(excel, engine='openpyxl') as writer: 
+                    df_uploaded_file.to_excel(writer, sheet_name='Resultado', index=True, engine='openpyxl')
+                    df2.to_excel(writer, sheet_name='Resultado', index=False, startcol=7, engine='openpyxl')
+                return excel.getvalue()
 
-        ######################### MONITOREAR PREDICCIÓN ############################################
-        #  ----- E V A L U A T I O N------   # 
-        #el archivo y_pred.xlsx guarda las predicciones hechas al guardar el modelo
-        #la idea es: compararlo con las predicciones actuales
-        new_pred = pd.DataFrame(predictionETO)
-        old_pred = pd.read_excel(OLD_PREDICCION, engine='openpyxl') 
-        print('------------------------------------------------------')
-        print('new_pred:', new_pred)
-        print('------------------------------------------------------')
+            # se guardan los cambios
+            writer.save()
+            writer.close()
+            boolean = True 
 
-        # Ajustar el tamaño de old_pred para que coincida con new_pred
-        old_pred = old_pred.head(len(new_pred))
-        # Imprimir tamaño del DataFrame ajustado
-        print('A la predicción anterior le ajusto el tamaño del nuevo dataset que ingresa el user:', len(old_pred))
-        print('------------------------------------------------------')
-        print('old_pred:', old_pred)
-        print('------------------------------------------------------')
+            ######################### MONITOREAR PREDICCIÓN ############################################
+            #  ----- E V A L U A T I O N------   # 
+            #el archivo OLD_PREDICCION guarda las predicciones generadas al entrenar el modelo.sav
+            #la idea es: compararlo con las predicciones actuales
+            new_pred = pd.DataFrame(predictionETO)
+            old_pred = pd.read_excel(OLD_PREDICCION, engine='openpyxl') 
+            print('------------------------------------------------------')
+            #print('new_pred:', new_pred)
+            print('------------------------------------------------------')            
 
-        from sklearn.metrics import r2_score
-        # The coefficient of determination: 1 is perfect prediction
-        coeficiente = r2_score(old_pred, new_pred)
-        print("Coeficiente de determinación R2 comparado con predicción del modelo entrenado:", coeficiente)
+            import random
+            # Ajustar el tamaño de old_pred para que coincida con new_pred, y a la vez tomar datos random
+            old_pred = old_pred.to_numpy().squeeze()
+            old_pred = random.choices(old_pred, k=len(new_pred))
 
-        from sklearn.metrics import mean_squared_error
-        model_rmse = np.sqrt(mean_squared_error(old_pred, new_pred))
-        print('RMSE: ', model_rmse)
-        
-        ######################### MONITOREAR PREDICCIÓN ############################################
+            print('predicted:', old_pred[10])
+            print('expected:', new_pred.values[10])
+            
+            # Imprimir tamaño del DataFrame ajustado
+            print('A la predicción anterior le ajusto el tamaño del nuevo dataset que ingresa el user:', len(old_pred))
+            print('------------------------------------------------------')
+            #print('old_pred:', old_pred)
+            print('------------------------------------------------------')
+
+            from sklearn.metrics import r2_score
+            # The coefficient of determination: 1 is perfect prediction
+            new_pred = new_pred.to_numpy().squeeze()
+            
+            print("haciendo el new preeeed", len(new_pred))
+            coeficiente = r2_score(old_pred, new_pred)
+            print("Coeficiente de determinación R2 comparado con predicción del modelo entrenado:", coeficiente)
+
+            from sklearn.metrics import mean_squared_error, mean_absolute_error
+            model_rmse = np.sqrt(mean_squared_error(old_pred, new_pred))
+            print('RMSE: ', model_rmse)
+            print("MAE", mean_absolute_error(old_pred, new_pred))
+            # Calcular el error cuadrado medio
+            mse = np.mean((new_pred - old_pred) ** 2)
+            print("Error cuadrado medio:", mse) #"cuánto difieren los dos conjuntos de valores."
+            # Calcular el error absoluto medio
+            mae = np.mean(np.abs(new_pred - old_pred))
+            print("Error absoluto medio:", mae) #"medida de la diferencia promedio absoluta entre los conjuntos de valores."
+            
+            ######################### MONITOREAR PREDICCIÓN ############################################
 
 if boolean:
     excel_bytes = generar_excel(df_uploaded_file, df2)
