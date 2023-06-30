@@ -27,6 +27,15 @@ rf_model.fit(X_train, y_train)
 y_pred = rf_model.predict(X_test)
 
 # ------------------------------- # 
+# ----- GUARDAR y_pred.xlsx ----- # 
+# ------ PARA LUEGO MONITOREAR -- # 
+# ------------------------------- # 
+# Convertir el array en un DataFrame
+df = pd.DataFrame({'y_pred': y_pred})
+# Guardar el DataFrame en un archivo Excel
+df.to_excel('y_pred.xlsx', index=False)
+
+# ------------------------------- # 
 # ----- E V A L U A T I O N------ # 
 # ------------------------------- # 
 from sklearn.metrics import r2_score
