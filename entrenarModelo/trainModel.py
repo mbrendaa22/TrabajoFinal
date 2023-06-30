@@ -18,32 +18,33 @@ X = pd.DataFrame.from_dict(variables)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=365/1096)
 
 # Crear modelo de bosque aleatorio con 100 árboles
-rf_model = RandomForestRegressor(n_estimators=100)
+rf_model = RandomForestRegressor(n_estimators=100, oob_score=True, random_state=42)
 
 # Entrenar modelo con conjunto de entrenamiento
 rf_model.fit(X_train, y_train)
 
 # Hacer predicciones con conjunto de prueba
 y_pred = rf_model.predict(X_test)
-
-# ------------------------------- # 
-# ----- GUARDAR y_pred.xlsx ----- # 
-# ------ PARA LUEGO MONITOREAR -- # 
-# ------------------------------- # 
-# Convertir el array en un DataFrame
-df = pd.DataFrame({'y_pred': y_pred})
-# Guardar el DataFrame en un archivo Excel
-df.to_excel('y_pred.xlsx', index=False)
+print('predicted:', y_pred[87])
+expected = y_test
+print('expected:', expected.values[87])
 
 # ------------------------------- # 
 # ----- E V A L U A T I O N------ # 
 # ------------------------------- # 
-from sklearn.metrics import r2_score
+from sklearn.metrics import mean_squared_error
+model_rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+print('RMSE: ', model_rmse)
 
+from sklearn.metrics import r2_score
 # The coefficient of determination: 1 is perfect prediction
 coeficiente = r2_score(y_test, y_pred)
 mensaje = "Observacion: {:.0%} de los datos se ajusta al modelo. Es decir, {:.0%} de variación en y explicada por variables x.".format(coeficiente, coeficiente)
 print(mensaje)
+
+# Obtener la puntuación OOB (R2)
+oob_score = rf_model.oob_score_
+print("Puntuación OOB:", oob_score)
 
 # Guardar modelo
 import pickle
