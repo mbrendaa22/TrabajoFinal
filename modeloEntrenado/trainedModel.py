@@ -3,10 +3,15 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 from io import BytesIO
-from config import MODEL, ARCHIVO_EJEMPLO, DATOS_MODELO_ENTRENADO, OLD_PREDICCION
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+import logging
+
+logging.basicConfig(
+    filename='logs.txt',
+    format='%(asctime)s - %(levelname)s - %(message)s',  # Formato de registro
+    level=logging.INFO  # Nivel de registro
+)
 
 st.header(' :blue[_Trabajo Final: Comparación de modelos de regresión para predecir la evapotranspiración potencial diaria y calcular la pérdida de agua por hectárea en la zona sur de Mendoza_] :blue_book: ')
 st.subheader('Alumna: Brenda Martinez')
@@ -24,7 +29,7 @@ fue el método Penman Monteith de la Organización de las Naciones Unidas para l
 """)
 
 # se carga el archivo de ejemplo
-df = pd.read_excel(ARCHIVO_EJEMPLO, engine='openpyxl')
+df = pd.read_excel('./archivoEjemplo.xlsx', engine='openpyxl')
 df_copy = df.astype('str')
 #print(f"Dataframe:\n {df}")
 
@@ -46,9 +51,9 @@ with st.expander(":raised_hand_with_fingers_splayed:  ¿COMO FUNCIONA? "):
 with st.expander(" :boom: INFORMACIÓN IMPORTANTE ANTES DE SUBIR TU ARCHIVO :boom:"):
     st.write(" :loudspeaker: ¡Algunos datos necesitan ser tratados antes de proceder!")
     st.write(":arrow_right: Radiación  ")
-    st.write("La radiacion debe estar en en MJ/m²/día. Usa la siguiente formula:")
+    st.write("La radiacion debe estar en en MJ/m²/día (MegaJulios por m²/día). Usa la siguiente formula:")
     st.latex(r"R * 0,0036")
-    st.write("Donde R es la radiación en W/m²/dia ")
+    st.write("Donde R es la radiación en W/m²/dia (Vatios por m²/día) ")
     st.write(":arrow_right: Presión de vapor actual")
     st.latex(r"0.6108 ^ (17.27 * T / (T + 237.3)) * rhmed / 10 ")
     st.write("Donde T: temperatura media, rhmed: humedad relativa media")
@@ -61,11 +66,10 @@ with st.expander(" :boom: INFORMACIÓN IMPORTANTE ANTES DE SUBIR TU ARCHIVO :boo
     z: altura de medición sobre la superficie''')
 
 def monitorearPrediccion():
-    ######################### MONITOREAR PREDICCIÓN ############################################
+    ############# MONITOREAR PREDICCIÓN #############
     try:
         data = pd.read_excel('./datosEntrenarModelo.xlsx', engine='openpyxl')
         # Definir variables independientes y target
-        # guardar en un dataframe solo las variables que nos importan
         target = data['ETPF56']
         y = pd.DataFrame.from_dict(target) 
         variables = data[['Mj/m2/d','TMax', 'TMin', 'PVA', 'Viento']]
@@ -73,28 +77,24 @@ def monitorearPrediccion():
 
         new_pred = pd.DataFrame(predictionETO)
         # Separar datos en conjunto de entrenamiento y prueba
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=len(new_pred), random_state=42)              
-        
-        from sklearn.metrics import r2_score
-        # The coefficient of determination: 1 is perfect prediction
-        #new_pred = np.array([new_pred])
-        new_pred = new_pred.to_numpy().squeeze()
-        print('new_pred', new_pred)
-        print('y_test', y_test)
-        r2 = r2_score(y_test, new_pred)
-        print("Coeficiente de determinación R2 comparado con predicción del modelo entrenado:", r2)
-
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=len(new_pred), random_state=42)            
+                
         from sklearn.metrics import mean_squared_error, mean_absolute_error
+        new_pred = new_pred.to_numpy().squeeze()
         model_rmse = np.sqrt(mean_squared_error(y_test, new_pred))
-        print('RMSE: ', model_rmse)
-        print("MAE", mean_absolute_error(y_test, new_pred))
+        logging.info("Error cuadrático medio de la raíz: Mide la cantidad de error que hay entre dos conjuntos de datos.")
+        logging.info(f'RMSE: {model_rmse}')
+        logging.info("Error absoluto medio: Mide la diferencia absoluta promedio entre el valor predicho y el real.")
+        logging.info(f"MAE: {mean_absolute_error(y_test, new_pred)}")
+        logging.info(f'Desviación de RMSE: {model_rmse - 0.512}')
 
     except ValueError as e:
         # Manejo del error capturado
         error_message = str(e)
         print("Error:", error_message)
-        st.error(f"Para poder monitorear la predicción el tamaño de prueba debe ser positivo y más pequeño que el número de muestras. Muestras de su archivo: {len(df_uploaded_file)}.")
-    ######################### MONITOREAR PREDICCIÓN ############################################
+        logging.error(f'Esto es una advertencia importante. {e}')
+        st.error(f"Para poder monitorear la predicción el tamaño de prueba debe ser positivo y más pequeño que el número de muestras (1095). Muestras de su archivo: {len(df_uploaded_file)}.")
+    ############# MONITOREAR PREDICCIÓN #############
 
 # Crear formulario para introducir archivo y hectáreas
 boolean = False
@@ -109,9 +109,9 @@ with st.form("my_form"):
             st.write(f"Has cargado el archivo: {uploaded_file.name}")
         else:
             # Si no se ha cargado un archivo, muestra un mensaje
-            st.write(f"La extensión del archivo debe ser: .xlsx")
-    
-
+            st.write(f"La extensión del archivo debe ser: .xlsx")    
+            logging.warning(f'¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal')
+            
         ha = st.number_input('¿Cuántas hectáreas tienes?', step = 1, value = 1, min_value=1) 
 
         submitted = st.form_submit_button("Submit :white_check_mark:")
@@ -121,14 +121,9 @@ with st.form("my_form"):
             df_uploaded_file = pd.read_excel(uploaded_file, engine='openpyxl') 
 
             # se carga el modelo entrenado para hacer predicciones
-            rf_model = pickle.load(open('ModeloEntrenado.sav', 'rb')) #read binary
+            rf_model = pickle.load(open('./ModeloEntrenado.sav', 'rb')) #read binary
             # se hace la prediccion con el archivo que sube el usuario
             predictionETO = rf_model.predict(df_uploaded_file)
-
-            # Guardar el DataFrame en un archivo Excel para usarlo luego para monitorear
-            #ACA PODRIA GUARDAR UN LOG CON LA FECHA+ARCHIVO
-            #dfPrediction = pd.DataFrame({'new_pred': predictionETO})
-            #dfPrediction.to_excel('predictionETO.xlsx', index=False)
 
             # ha = hectárea
             # calcular la perdida de agua por hectárea teniendo en cuenta lo siguiente:
@@ -162,14 +157,14 @@ with st.form("my_form"):
                     st.write(":rainbow: ¿Qué parámetros climáticos afectan a la ETO?")
                     st.write("Los principales parámetros climáticos que afectan la evapotranspiración son la radiación, la temperatura del aire, la humedad atmosférica y la velocidad del viento.")
 
-                plt.style.use('dark_background')
+                plt.style.use('bmh')
                 fig, ax = plt.subplots()
                 ax.bar(np.arange(len(df2))+1, df2['Pérdida(litros/ha/día)']) # np.arange(len(df2))+1 crea una secuencia numérica de 1 a la cantidad de filas en df2, que son los valores del eje X
                 ax.set_xlabel('Día')
                 ax.set_ylabel('Cantidad de agua perdida (litros/ha/día)')
                 st.pyplot(fig)
 
-                plt.style.use('dark_background')
+                plt.style.use('tableau-colorblind10')
                 fig, ax = plt.subplots()
                 ax.bar(np.arange(len(df_uploaded_file))+1,  df_uploaded_file['ETO'] )
                 ax.set_xlabel('Día')
@@ -208,13 +203,10 @@ with st.form("my_form"):
         # Manejo del error capturado
         error_message = str(e)
         print("Error:", error_message)
+        logging.error(f'Debes cargar un archivo. {e}')
         st.error(f"Debes cargar un archivo.")        
 
 
 if boolean:
     excel_bytes = generar_excel(df_uploaded_file, df2)
     st.download_button(label='Descargar archivo', data=excel_bytes , file_name='Resultado.xlsx', mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-
-
-
-
