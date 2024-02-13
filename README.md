@@ -1,4 +1,4 @@
-# ModelosRegresion
+# "Comparación de modelos de regresión para predecir la evapotranspiración potencial diaria y calcular la pérdida de agua por hectárea en la zona sur de Mendoza"
 
 Carpetas
 - entrenarModelo: contiene los datos y el script para entrenar el modelo
