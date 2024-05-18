@@ -14,7 +14,7 @@ logging.basicConfig(
 )
 
 st.header(' :blue[_Trabajo Final: Comparación de modelos de regresión para predecir la evapotranspiración potencial diaria y calcular la pérdida de agua por hectárea en la zona sur de Mendoza_] :blue_book: ')
-st.subheader('Alumna: Brenda Martinez')
+st.subheader('Autora: Brenda Daiana Martinez Lujan')
 st.title('Evapotranspiracion Predictiva :farmer:')
 st.markdown("""
 Esta plataforma ayuda a los agricultores a estimar la pérdida de agua por hectárea a través de la evapotranspiración. 
@@ -42,7 +42,7 @@ with st.expander(":raised_hand_with_fingers_splayed:  ¿COMO FUNCIONA? "):
     sampleExcel = BytesIO()
     writer = pd.ExcelWriter(sampleExcel, engine='xlsxwriter')
     df.to_excel(writer, sheet_name='Hoja1', index=False)
-    writer.save()  
+    writer.save()
     sampleExcel_bytes = sampleExcel.getvalue()
 
     # Crear botón de descarga

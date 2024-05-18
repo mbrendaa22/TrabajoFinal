@@ -1,0 +1,75 @@
+2024-04-25 17:57:55,101 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-04-25 17:57:55,722 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-04-25 19:38:37,228 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-04-25 19:38:37,235 - ERROR - Debes cargar un archivo. Invalid file path or buffer object type: <class 'NoneType'>
+2024-04-25 19:38:38,419 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-04-25 19:38:38,428 - ERROR - Debes cargar un archivo. Invalid file path or buffer object type: <class 'NoneType'>
+2024-04-25 19:38:40,201 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-04-25 19:38:40,224 - ERROR - Debes cargar un archivo. Invalid file path or buffer object type: <class 'NoneType'>
+2024-04-25 19:39:21,474 - ERROR - Debes cargar un archivo. node array from the pickle has an incompatible dtype:
+- expected: {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+- got     : [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+2024-04-25 19:39:58,620 - ERROR - Debes cargar un archivo. node array from the pickle has an incompatible dtype:
+- expected: {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+- got     : [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+2024-05-18 12:16:48,279 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:18:15,322 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:19:33,823 - ERROR - Debes cargar un archivo. node array from the pickle has an incompatible dtype:
+- expected: {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+- got     : [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+2024-05-18 12:20:35,018 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:23:55,001 - ERROR - Debes cargar un archivo. node array from the pickle has an incompatible dtype:
+- expected: {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+- got     : [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+2024-05-18 12:24:08,381 - ERROR - Debes cargar un archivo. node array from the pickle has an incompatible dtype:
+- expected: {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+- got     : [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+2024-05-18 12:24:16,898 - ERROR - Debes cargar un archivo. node array from the pickle has an incompatible dtype:
+- expected: {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+- got     : [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+2024-05-18 12:24:46,579 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:24:49,719 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:30:11,819 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:30:23,331 - ERROR - Debes cargar un archivo. node array from the pickle has an incompatible dtype:
+- expected: {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+- got     : [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+2024-05-18 12:33:49,820 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:34:08,858 - INFO - Error cuadrático medio de la raíz: Mide la cantidad de error que hay entre dos conjuntos de datos.
+2024-05-18 12:34:08,858 - INFO - RMSE: 2.831798313729359
+2024-05-18 12:34:08,858 - INFO - Error absoluto medio: Mide la diferencia absoluta promedio entre el valor predicho y el real.
+2024-05-18 12:34:08,866 - INFO - MAE: 2.2694467333191337
+2024-05-18 12:34:08,866 - INFO - Desviación de RMSE: 2.319798313729359
+2024-05-18 12:35:10,351 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:36:35,940 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:37:07,923 - INFO - Error cuadrático medio de la raíz: Mide la cantidad de error que hay entre dos conjuntos de datos.
+2024-05-18 12:37:07,923 - INFO - RMSE: 2.831798313729359
+2024-05-18 12:37:07,923 - INFO - Error absoluto medio: Mide la diferencia absoluta promedio entre el valor predicho y el real.
+2024-05-18 12:37:07,924 - INFO - MAE: 2.2694467333191337
+2024-05-18 12:37:07,924 - INFO - Desviación de RMSE: 2.319798313729359
+2024-05-18 12:40:14,546 - INFO - Error cuadrático medio de la raíz: Mide la cantidad de error que hay entre dos conjuntos de datos.
+2024-05-18 12:40:14,546 - INFO - RMSE: 2.831798313729359
+2024-05-18 12:40:14,546 - INFO - Error absoluto medio: Mide la diferencia absoluta promedio entre el valor predicho y el real.
+2024-05-18 12:40:14,547 - INFO - MAE: 2.2694467333191337
+2024-05-18 12:40:14,547 - INFO - Desviación de RMSE: 2.319798313729359
+2024-05-18 12:41:51,957 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:43:16,553 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 12:43:59,940 - INFO - Error cuadrático medio de la raíz: Mide la cantidad de error que hay entre dos conjuntos de datos.
+2024-05-18 12:43:59,941 - INFO - RMSE: 2.831798313729359
+2024-05-18 12:43:59,941 - INFO - Error absoluto medio: Mide la diferencia absoluta promedio entre el valor predicho y el real.
+2024-05-18 12:43:59,943 - INFO - MAE: 2.2694467333191337
+2024-05-18 12:43:59,943 - INFO - Desviación de RMSE: 2.319798313729359
+2024-05-18 12:47:15,942 - INFO - Error cuadrático medio de la raíz: Mide la cantidad de error que hay entre dos conjuntos de datos.
+2024-05-18 12:47:15,942 - INFO - RMSE: 2.831798313729359
+2024-05-18 12:47:15,942 - INFO - Error absoluto medio: Mide la diferencia absoluta promedio entre el valor predicho y el real.
+2024-05-18 12:47:15,943 - INFO - MAE: 2.2694467333191337
+2024-05-18 12:47:15,943 - INFO - Desviación de RMSE: 2.319798313729359
+2024-05-18 13:01:17,652 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 13:01:18,105 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 13:01:38,602 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 13:01:51,740 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 13:02:05,274 - WARNING - ¡Cuidado! El usuario se olvidó cargar un archivo o la extensión estaba mal
+2024-05-18 13:03:13,615 - INFO - Error cuadrático medio de la raíz: Mide la cantidad de error que hay entre dos conjuntos de datos.
+2024-05-18 13:03:13,616 - INFO - RMSE: 2.831798313729359
+2024-05-18 13:03:13,616 - INFO - Error absoluto medio: Mide la diferencia absoluta promedio entre el valor predicho y el real.
+2024-05-18 13:03:13,616 - INFO - MAE: 2.2694467333191337
+2024-05-18 13:03:13,616 - INFO - Desviación de RMSE: 2.319798313729359
